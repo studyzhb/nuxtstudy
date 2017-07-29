@@ -4,7 +4,8 @@ import Nuxt from 'nuxt'
 import R from 'ramda'
 import {resolve} from 'path'
 const host = process.env.HOST || '127.0.0.1'
-const port = process.env.PORT || 3000
+console.log(process.env.PORT)
+const port = process.env.PORT || 3006
 const MIDDLEWARES=['database','router']
 
 let config = require('../nuxt.config.js')
@@ -15,9 +16,11 @@ const r=path=>resolve(__dirname,path)
 class Server {
   constructor() {
     this.app = new Koa()
+    
     this.useMiddleWare(this.app)(MIDDLEWARES) 
   }
   useMiddleWare(app) {
+    
     return R.map(R.compose(
       R.map(i=>i(app)),
       require,
