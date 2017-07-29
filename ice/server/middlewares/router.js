@@ -6,31 +6,11 @@ import config from '../config'
 export const router=app=>{
     const router=new Router()
 
-    router.get('/wechat-header',(ctx,next)=>{
-        require('../wechat')
-        const token=config.wechat.token;
-        const {
-            signature,
-            nonce,
-            timestamp,
-            echostr
-        }=ctx.query
-        console.log(ctx.query)
-        const str=[token,timestamp,nonce].sort().join('')
-        const sha=sha1(str)
-        if(sha===signature){
-            ctx.body=echostr
-        }else{
-            ctx.body='Failed'
-        }
-        
-    })
+    router.all('/wechat-header',wechatMiddle(opts,reply))
 
-    router.post('/wechat-header',(ctx,next)=>{
-        
-    })
+
 
     app.use(router.routes())
-    app.use(router.allowedMethods())
+        .use(router.allowedMethods())
 
 }
