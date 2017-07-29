@@ -40,10 +40,9 @@ export default function (opts, reply) {
 
             const replyBody = ctx.body
             const msg = ctx.weixin
-            console.log(ctx.weixin)
-            // console.log(ctx.body)
+
             const xml=util.tpl(replyBody,msg)
-    
+            console.log(xml)
             ctx.status = 200
             ctx.type = 'application/xml'
             ctx.body = xml
