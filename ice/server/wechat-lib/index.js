@@ -1,7 +1,35 @@
 import request from 'request-promise'
+import formstream from 'formstream'
+import fs from 'fs'
+
 const base = 'https://api.weixin.qq.com/cgi-bin/'
 const api = {
-    accessToken: base + 'token?grant_type=client_credential'
+    accessToken: base + 'token?grant_type=client_credential',
+    //临时素材
+    temporary:{
+        upload:base+'media/upload?',
+        fetch:base+'media/get?'
+    },
+    //永久素材
+    permanent:{
+        upload:base+'material/add_material?',
+        uploadNewsPic:base+'media/uploadimg?',
+        uploadNews:base+'material/add_news?',
+        fetch:base+'material/get_material?',
+        del:base+'material/del_material?',
+        update:base+'material/update_news?',
+        count:base+'material/get_materialcount?',
+        batch:base+'material/batchget_material?'
+    }
+}
+
+function statFile(filepath){
+    return new Promise((resolve,reject)=>{
+        fs.stat(filepath,(err,stat)=>{
+            if(err) reject(err)
+            else resolve(stat)
+        })
+    })
 }
 
 export default class Wechat {
@@ -52,4 +80,43 @@ export default class Wechat {
             return false
         }
     }
+    uploadMaterial(token,type,material,permanent){
+        let from={}
+        let url=api.temporary.upload
+        if(permanent){
+            url=api.permanent.upload
+            _.extend(form,permanent)
+        }
+        if(type==='pic'){
+            url=api.permanent.uploadNewsPic
+        }
+        if(type==='news'){
+            url=api.permanent.uploadNews
+            form=material
+        }else{
+            form=formstream()
+            const stat=await statFile(material)
+            form.file('media',material,path.basename(material),size)
+        }
+        let uploadUrl=url+'access_token='+token
+
+        if(!permanent){
+            uploadUrl+='&type='+type
+        }else{
+            form.field('access_token',access_token)
+        }
+        const options={
+            method:'POST',
+            url:uploadUrl,
+            json:true
+        }
+        if(type==='news'){
+            options.body=form
+        }else{
+            options.formData=form
+        }
+
+        return options;
+    }
+
 }
