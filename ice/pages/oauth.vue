@@ -29,31 +29,11 @@ export default {
     const wx=window.wx
     const url=window.location.href
 
-    this.$store.dispatch('getWechatSignature',encodeURIComponent(url))
+    this.$store.dispatch('getUserByOAuth',encodeURIComponent(url))
       .then(res=>{
         if(res.data.success){
-          const params=res.data.params
-          wx.config({
-            debug:true,
-            appId:params.appId,
-            timestamp:params.timestamp,
-            nonceStr:params.nonceStr,
-            signature:params.signature,
-            jsApiList:[
-              'chooseImage',
-              'onMenuShareTimeline',
-              'previewImage',
-              'uploadImage',
-              'downloadImage',
-              'hideAllNonBaseMenuItem',
-              'showMenuItems'
-            ]
+          console.log(res.data)
 
-          })
-          wx.ready(()=>{
-            wx.hideAllNonBaseMenuItem()
-            console.log('success')
-          })
         }
       })
   }
