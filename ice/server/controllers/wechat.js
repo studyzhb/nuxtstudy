@@ -25,12 +25,12 @@ export async function redirect(ctx,next) {
     const params=`${a}_${b}`
 
     const url=api.getAuthorizeURL(scope,target,params)
-    ctx.redirect(url)
+    console.log(encodeURIComponent(target))
+    // ctx.redirect(url)
 }
 
 export async function oauth(ctx,next) {
    let url=ctx.query.url
-    if(!url) ctx.throw(404)
     
     url=decodeURIComponent(url)
 
