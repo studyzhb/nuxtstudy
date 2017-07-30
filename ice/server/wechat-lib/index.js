@@ -41,6 +41,14 @@ const api = {
         getBlackList:base+'tags/members/getblacklist?',
         batchBlackUsers:base+'tags/members/batchblacklist?',
         batchUnBlackUsers:base+'tags/members/batchunblacklist?'
+    },
+    menu:{
+        create:base+'menu/create?',
+        get:base+'menu/get?',
+        del:base+'menu/delete?',
+        addCondition:base+'menu/addconditional?',
+        delCondition:base+'menu/delconditional?',
+        getInfo:base+'get_current_selfmenu_info?'
     }
 }
 
@@ -109,7 +117,7 @@ export default class Wechat {
         return data
     }
     //封装上传参数
-    uploadMaterial(token,type,material,permanent){
+   async uploadMaterial(token,type,material,permanent){
         let from={}
         let url=api.temporary.upload
         if(permanent){
@@ -319,5 +327,46 @@ export default class Wechat {
             ${api.user.fetchUserList}access_token=${token}&next_openid=${openId||''}
         `
         return {url:url}
+    }
+    createMenu(token,menu){
+        const url=api.menu.create+'access_token='+token
+        console.log(menu)
+        return {method:'POST',url:url,body:menu}
+    }
+    getMenu(token){
+        const url=api.menu.get+'access_token='+token
+
+        return {url:url}
+    }
+    delMenu(token){
+        const url=api.menu.del+'access_token='+token
+
+        return {url:url}
+    }
+    //添加自定义菜单
+    addConditionMenu(token,menu,rule){
+        const url=api.menu.addCondition+'access_token='+token
+
+        const form={
+            button:menu,
+            matchrule:rule
+        }
+
+        return {method:'POST',url:url,body:form}
+    }
+    //删除自定义菜单
+    delConditionMenu(token,menuId){
+        const url=api.menu.delCondition+'access_token='+token
+
+        const form={
+            menuid:menuId
+        }
+
+        return {method:'POST',url:url,body:form}
+    }
+    getCurrentMenuInfo(token){
+        const url=api.menu.getInfo+'access_token='+token
+
+        return {url}
     }
 }
