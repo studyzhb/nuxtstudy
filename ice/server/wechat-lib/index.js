@@ -1,6 +1,8 @@
 import request from 'request-promise'
 import formstream from 'formstream'
+import path from 'path'
 import fs from 'fs'
+import * as _ from 'lodash'
 
 const base = 'https://api.weixin.qq.com/cgi-bin/'
 const api = {
@@ -80,6 +82,14 @@ export default class Wechat {
             return false
         }
     }
+    //上传
+    async handleOperation(operation,...args){
+        const tokenData=await this.fetchAccessToken()
+        const options=await this[operation](tokenData.access_token,...args)
+        const data=await this.request(options)
+        return data
+    }
+    //封装上传参数
     uploadMaterial(token,type,material,permanent){
         let from={}
         let url=api.temporary.upload
@@ -103,7 +113,7 @@ export default class Wechat {
         if(!permanent){
             uploadUrl+='&type='+type
         }else{
-            form.field('access_token',access_token)
+            form.field('access_token',token)
         }
         const options={
             method:'POST',
@@ -118,5 +128,67 @@ export default class Wechat {
 
         return options;
     }
+    //获取素材
+    fetchMaterial(token,mediaId,type,permanent){
+        let form={}
+        let fetchUrl=api.temporary.fetch
+        if(permanent){
+            fetchUrl=api.permanent.fetch
+        }
 
+        let url=fetchUrl+'access_token='+token
+        let options={method:'POST',url:url}
+
+        if(permanent){
+            form.media_id=mediaId
+            form.access_token=token
+            options.body=form
+
+        }else{
+            if(type==='video'){
+                url=url.replace('https://','http://')
+            }
+            url+='&media_id='+mediaId
+        }
+
+        return options
+
+    }
+    //删除素材
+    deleteMaterial(token,mediaId){
+        const form={
+            media_id:mediaId
+        }
+
+        const url=api.permanent.del+'access_token='+token+'&media_id='+mediaId
+
+        return {method:'POST',url:url,body:form}
+    }
+    //更新素材
+    updateMaterial(token,mediaId,news){
+        const form={
+            media_id:mediaId
+        }
+        _.extend(form,news)
+
+        const url=api.permanent.update+'access_token='+token+'&media_id='+mediaId
+
+        return {method:'POST',url:url,body:form}
+    }
+    //获取素材总数
+    countMaterial(token){
+        const url=api.permanent.count+'access_token='+token
+
+        return {method:'POST',url:url}
+    }
+    //获取素材列表
+    batchMaterial(token,options){
+        options.type=options.type||'image'
+        options.offset=options.offset||0
+        options.count=options.count||10
+
+        const url=api.permanent.batch+'access_token='+token
+
+        return {method:'POST',url:url,body:options}
+    }
 }
