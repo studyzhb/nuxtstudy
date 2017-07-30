@@ -54,7 +54,7 @@ const api = {
         getInfo:base+'get_current_selfmenu_info?'
     },
     ticket:{
-        get:prefix+''
+        get:prefix+'ticket/getticket?'
     }
 }
 
@@ -90,10 +90,10 @@ export default class Wechat {
         
     }
 
-    async fetchTicket() {
+    async fetchTicket(token) {
         let data = await this.getTicket()
         if (!this.isValidToken(data,'ticket')) {
-            data = await this.updateTicket()
+            data = await this.updateTicket(token)
         }
         await this.saveTicket(data)
         return data

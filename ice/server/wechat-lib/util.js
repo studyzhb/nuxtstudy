@@ -84,14 +84,14 @@ function raw(args){
     let newArgs={}
 
     keys.forEach(key=>{
-        newArgs[keys.toLowerCase()]=args[key]
+        newArgs[key.toLowerCase()]=args[key]
     })
     let str=''
     for(let k in newArgs){
         str+='&'+k+'='+newArgs[k]
     }
 
-    return string.substr(1)
+    return str.substr(1)
 }
 
 export function sign(ticket,url){

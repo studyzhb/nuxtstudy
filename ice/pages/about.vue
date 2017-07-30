@@ -13,6 +13,7 @@
   </section>
 </template>
 <script>
+import {mapState} from 'vuex'
 export default {
   asyncData ({ req }) {
     return {
@@ -23,6 +24,38 @@ export default {
     return {
       title: `About Page (${this.name}-side)`
     }
+  },
+  beforeMount(){
+    const wx=window.wx
+    const url=window.location.href
+
+    this.$store.dispatch('getWechatSignature',url)
+      .then(res=>{
+        if(res.data.success){
+          const params=res.data.params
+          wx.config({
+            debug:true,
+            appId:params.appId,
+            timestamp:params.timestamp,
+            nonceStr:params.nonceStr,
+            signature:params.signature,
+            jsApiList:[
+              'chooseImage',
+              'onMenuShareTimeline',
+              'previewImage',
+              'uploadImage',
+              'downloadImage',
+              'hideAllNonBaseMenuItem',
+              'showMenuItems'
+            ]
+
+          })
+          wx.ready(()=>{
+            wx.hideAllNonBaseMenuItem()
+            console.log('success')
+          })
+        }
+      })
   }
 }
 </script>
