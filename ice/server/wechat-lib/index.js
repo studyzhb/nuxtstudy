@@ -5,6 +5,7 @@ import fs from 'fs'
 import * as _ from 'lodash'
 
 const base = 'https://api.weixin.qq.com/cgi-bin/'
+const prefix = 'https://api.weixin.qq.com/cgi-bin/'
 const api = {
     accessToken: base + 'token?grant_type=client_credential',
     //临时素材
@@ -49,6 +50,9 @@ const api = {
         addCondition:base+'menu/addconditional?',
         delCondition:base+'menu/delconditional?',
         getInfo:base+'get_current_selfmenu_info?'
+    },
+    ticket:{
+        get:prefix+''
     }
 }
 
@@ -68,6 +72,8 @@ export default class Wechat {
         this.appSecret = opts.appSecret
         this.getAccessToken = opts.getAccessToken
         this.saveAccessToken = opts.saveAccessToken
+        this.getTicket = opts.getTicket
+        this.saveTicket = opts.saveTicket
         this.fetchAccessToken()
     }
     async request(options) {
@@ -81,6 +87,16 @@ export default class Wechat {
         }
         
     }
+
+    async fetchAccessToken() {
+        let data = await this.getAccessToken()
+        if (!this.isValidAccessToken(data)) {
+            data = await this.updateAccessToken()
+        }
+        await this.saveAccessToken(data)
+        return data
+    }
+
     async fetchAccessToken() {
         let data = await this.getAccessToken()
         if (!this.isValidAccessToken(data)) {
@@ -330,7 +346,6 @@ export default class Wechat {
     }
     createMenu(token,menu){
         const url=api.menu.create+'access_token='+token
-        console.log(menu)
         return {method:'POST',url:url,body:menu}
     }
     getMenu(token){
