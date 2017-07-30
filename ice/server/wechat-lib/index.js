@@ -22,6 +22,25 @@ const api = {
         update:base+'material/update_news?',
         count:base+'material/get_materialcount?',
         batch:base+'material/batchget_material?'
+    },
+    tag:{
+        create:base+'tags/create?',
+        fetch:base+'tags/get?',
+        update:base+'tags/update?',
+        del:base+'tags/delete?',
+        fetchUsers:base+'user/tag/get?',
+        batchTag:base+'tags/members/batchtagging?',
+        batchUntag:base+'tags/members/batchuntagging?',
+        getTagList:base+'tags/getidlist?'
+    },
+    user:{
+        remark:base+'user/info/updateremark?',
+        info:base+'user/info?',
+        batchinfo:base+'user/info/batchget?',
+        fetchUserList:base+'user/get?',
+        getBlackList:base+'tags/members/getblacklist?',
+        batchBlackUsers:base+'tags/members/batchblacklist?',
+        batchUnBlackUsers:base+'tags/members/batchunblacklist?'
     }
 }
 
@@ -190,5 +209,115 @@ export default class Wechat {
         const url=api.permanent.batch+'access_token='+token
 
         return {method:'POST',url:url,body:options}
+    }
+    //创建标签
+    createTag(token,name){
+        const form={
+            tag:{
+                name:name
+            }
+        }
+        const url=api.tag.create+'access_token='+token
+
+        return {method:'POST',url:url,body:form}
+    }
+    //获取标签
+    fetchTag(token){
+        const url=api.tag.fetch+'access_token='+token
+
+        return {url:url}
+    }
+    //编辑标签
+    updateTag(token,tagId,name){
+        const form={
+            tag:{
+                id:tagId,
+                name:name
+            }
+        }
+        const url=api.tag.update+'access_token='+token
+        return {method:'POST',url:url,body:form}
+    }
+    //删除标签
+    delTag(token,tagId,name){
+        const form={
+            tag:{
+                id:tagId
+            }
+        }
+        const url=api.tag.del+'access_token='+token
+        return {method:'POST',url:url,body:form}
+    }
+    fetchTagUsers(token,tagId,openId){
+        const form={
+            tagid:tagId,
+            next_openid:openId||''
+        }
+        
+        const url=api.tag.fetchUsers+'access_token='+token
+
+        return {method:'POST',url:url,body:form}
+    }
+    //批量为用户打标签
+    batchTag(token,openIdList,tagId){
+        const form={
+            openid_list:openIdList,
+            tagid:tagId
+        }
+        const url=api.tag.batchTag+'access_token='+token
+
+        return {method:'POST',url:url,body:form}
+    }
+    //批量为用户去除标签
+    batchUnTag(token,openIdList,tagId){
+        const form={
+            openid_list:openIdList,
+            tagid:tagId
+        }
+        const url=api.tag.batchUnTag+'access_token='+token
+
+        return {method:'POST',url:url,body:form}
+    }
+    //获取用户身上的标签
+    getTagList(token,openId){
+        const form={
+            openid:openId
+        }
+        const url=api.tag.getTagList+'access_token='+token
+
+        return {method:'POST',url:url,body:form}
+    }
+    remarkUser(token,openId,remark){
+        const form={
+            openid:openId,
+            remark:remark
+        }
+        const url=api.user.remark+'access_token='+token
+
+        return {method:'POST',url:url,body:form}
+    }
+    //获取用户的资料信息
+    getUserInfo(token,openId,lang){
+        const url=`
+            ${api.user.info}access_token=${token}&openid=${openId}&lang=${lang||'zh_CN'}
+        `
+        return {url:url}
+    }
+
+    batchUserInfo(token,userList){
+        const url=`
+            ${api.user.batchInfo}access_token=${token}
+        `
+        const form={
+            user_list:userList
+        }
+        return {method:'POST',url:url,body:form}
+    }
+    //获取用户列表
+    fetchUserList(token,openId){
+        const url=`
+            ${api.user.fetchUserList}access_token=${token}&next_openid=${openId||''}
+        `
+        return {url:url}
     }
 }
