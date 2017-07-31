@@ -25,8 +25,13 @@ export async function redirect(ctx,next) {
     const params=`${a}_${b}`
 
     const url=api.getAuthorizeURL(scope,target,params)
-    console.log(encodeURIComponent(target))
-    // ctx.redirect(url)
+    console.log(url)
+    let testurl=`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd7b9ceef1a29c162&redirect_uri=http://webzhb.ngrok.cc/oauth&response_type=code&scope=snsapi_us
+erinfo&state=1_2#wechat_redirect`
+    let testencodeurl=`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd7b9ceef1a29c162&redirect_uri=http%3A%2F%2Fwebzhb.ngrok.cc%2Foauth&response_type=code&scope=s
+nsapi_userinfo&state=1_2#wechat_redirect`
+    
+    ctx.redirect(testurl)
 }
 
 export async function oauth(ctx,next) {
