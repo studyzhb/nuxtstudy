@@ -1,7 +1,7 @@
 import request from 'request-promise'
 const base = 'https://api.weixin.qq.com/sns/'
 const api={
-    accessToken:'oauth2/access_token?',
+    accessToken:base+'oauth2/access_token?',
     authorize:'https://open.weixin.qq.com/connect/oauth2/authorize?',
     userInfo:base+'userinfo?'
 }
@@ -25,8 +25,7 @@ export default class WechatOAuth {
 
     getAuthorizeURL(scope='snsapi_base',target,state){
         
-        const url=`${api.authorize}appid=${this.appID}&redirect_uri=${encodeURIComponent(target)}&response_type=code&scope=${scope}&state=${state}#wechat_redirect 
-`
+        const url=`${api.authorize}appid=${this.appID}&redirect_uri=${encodeURIComponent(target)}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`
         return url
     }
 
@@ -38,8 +37,9 @@ export default class WechatOAuth {
 
     async getUserInfo(token,openID,lang='zh_CN'){
         const url=`${api.userInfo}access_token=${token}&openid=${openID}&lang=${lang}`
-        const data=await this.request({url})
 
+        const data=await this.request({url})
+        
         return data
     }
 
