@@ -1,16 +1,16 @@
-<template>
-  <div>
-    <nuxt/>
-    <my-footer/>
-  </div>
+<template lang='pug'>
+  #app
+    #main
+     nuxt
+    v-nav
 </template>
 
 <script>
-import MyFooter from '~components/Footer.vue'
+import vNav from '~components/nav.vue'
 
 export default {
   components: {
-    MyFooter
+    vNav
   }
 }
 </script>

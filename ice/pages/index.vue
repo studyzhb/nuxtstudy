@@ -16,7 +16,7 @@
           .name {{item.name}}
           .playedBy {{item.playedBy}}
   .city
-    .title 维斯特洛
+    .city-title 维斯特洛
     .intro 
     | 座楼手动撒开了发上来了按时发什么法拉看什么散发萨斯ga.gagasf,nas你看就看你看见你发就看见你就爱上的你就爱上你就可能大家看上的缴纳时间你的沮丧呢那个
     .items(v-for='(item,index) in cities',:key='index')
@@ -67,7 +67,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang='sass' src='~static/sass/index.sass' scoped>
 .title
 {
   margin: 50px 0;
