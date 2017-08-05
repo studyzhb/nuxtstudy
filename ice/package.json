@@ -16,7 +16,7 @@
     "cross-env": "^5.0.0",
     "ejs": "^2.5.6",
     "formstream": "^1.1.0",
-    "koa": "^2.0.0",
+    "koa": "^2.3.0",
     "koa-router": "v7.2.1",
     "lodash": "^4.17.4",
     "mongoose": "^4.11.4",

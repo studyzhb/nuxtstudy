@@ -3,12 +3,14 @@ import {parse as urlParse} from 'url'
 import {parse as queryParse} from 'querystring'
 import config from '../config'
 
+//获取签名 js-sdk
 export async function signature(ctx,next) {
     let url=ctx.query.url
+    console.log(ctx)
     if(!url) ctx.throw(404)
     
     url=decodeURIComponent(url)
-
+    console.log(url)
     const params=await api.getSignatureAsync(url)
 
     ctx.body={
@@ -25,24 +27,22 @@ export async function redirect(ctx,next) {
     const params=`${a}_${b}`
 
     const url=api.getAuthorizeURL(scope,target,params)
-    console.log(url)
-    let testurl=`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd7b9ceef1a29c162&redirect_uri=http://webzhb.ngrok.cc/oauth&response_type=code&scope=snsapi_us
-erinfo&state=1_2#wechat_redirect`
-    let testencodeurl=`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd7b9ceef1a29c162&redirect_uri=http%3A%2F%2Fwebzhb.ngrok.cc%2Foauth&response_type=code&scope=s
-nsapi_userinfo&state=1_2#wechat_redirect`
-    
-    ctx.redirect(testurl)
+
+    ctx.redirect(url)
 }
 
 export async function oauth(ctx,next) {
    let url=ctx.query.url
-    
+    console.log(ctx)
     url=decodeURIComponent(url)
+    console.log(url)
 
     const urlObject=urlParse(url)
 
     const params=queryParse(urlObject.query)
+
     const code=params.code
+    
     const user=await api.getUserByCode(code)
     console.log(user)
 
